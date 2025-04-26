@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список файлов</title>
+</head>
+<body>
+    <h3>Содержимое рабочей директории</h3>
+    <ul>
+        {% for item in contents %}
+            <li>
+                {{ item.name }}
+                ({{ item.type }}{% if item.type == 'file' %}, {{ item.size|filesizeformat }}{% endif %})
+            </li>
+        {% empty %}
+            <li>Нет файлов или ошибка доступа</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
