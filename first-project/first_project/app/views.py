@@ -28,19 +28,24 @@ def home_view(request):
 def time_view(request):
     # обратите внимание – здесь HTML шаблона нет, 
     # возвращается просто текст
-    current_time = datetime.now().strftime('%H:%M')
-    msg = f'Текущее время: {current_time}'
-    return HttpResponse(msg)
+    # current_time = datetime.now().strftime('%H:%M')
+    # msg = f'Текущее время: {current_time}'
+    # return HttpResponse(msg)
+    current_time = datetime.now().strftime('%H:%M:%S')
+    home_url = reverse('home')
+    return render(
+        request,
+        'app/current_time.html',
+        {
+            'current_time': current_time,
+            'home_url': home_url
+        }
+    )
 
 
 def workdir_view(request):
+    home_url = reverse('home')
     project_dir = Path(__file__).resolve().parent.parent
-    # files = []
-    # for item in project_dir.iterdir():
-    #     files.append(f"{item.name} {'(dir)' if item.is_dir() else ''}")
-    # return HttpResponse("<br>".join(files))
-
-    # project_dir = settings.BASE_DIR
     contents = []
     try:
         for item in Path(project_dir).iterdir():
@@ -52,4 +57,11 @@ def workdir_view(request):
     except Exception as e:
         contents = [{'error': str(e)}]
 
-    return render(request, 'app/workdir.html', {'contents': contents})
+    return render(
+        request,
+        'app/workdir.html',
+        {
+            'contents': contents,
+            'home_url': home_url
+        }
+    )

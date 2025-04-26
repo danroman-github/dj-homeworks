@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Текущее время</title>
+    <meta charset="UTF-8">
+    <title>Текущее время</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <span> <a class="material-symbols-outlined" href="">Назад</a></span>
+    <div>
+      <a href="{{ home_url }}" style="text-decoration: none;">
+        <span style="color: #1976D2; font-weight: 500;">
+          ← На главную
+        </span>
+      </a>
+      <h1>Текущее время: {{ current_time }}</h1>
+    </div>
 
 </body>
 </html>

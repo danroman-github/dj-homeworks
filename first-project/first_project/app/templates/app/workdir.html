@@ -5,16 +5,23 @@
     <title>Список файлов</title>
 </head>
 <body>
-    <h3>Содержимое рабочей директории</h3>
-    <ul>
-        {% for item in contents %}
-            <li>
-                {{ item.name }}
-                ({{ item.type }}{% if item.type == 'file' %}, {{ item.size|filesizeformat }}{% endif %})
-            </li>
-        {% empty %}
-            <li>Нет файлов или ошибка доступа</li>
-        {% endfor %}
-    </ul>
+    <div>
+        <a href="{{ home_url }}" style="text-decoration: none;">
+            <span style="color: #1976D2; font-weight: 500;">
+              ← На главную
+            </span>
+        </a>
+        <h3>Содержимое рабочей директории</h3>
+        <ul>
+            {% for item in contents %}
+                <li>
+                    {{ item.name }}
+                    ({{ item.type }}{% if item.type == 'file' %}, {{ item.size|filesizeformat }}{% endif %})
+                </li>
+            {% empty %}
+                <li>Нет файлов или ошибка доступа</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
