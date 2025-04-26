@@ -17,6 +17,8 @@ home_view использует шаблон для генерации конте
 
 Вам нужно вписать свой код в следующие файлы:
 
-urls.py
-views.py
+[urls.py](/first-project/first_project/first_project/urls.py)
+
+[views.py](/first-project/first_project/app/views.py)
+
 В случае возникновения ошибок, не забывайте использовать рекомендации по отладке вашего Django-проекта из лекции.
