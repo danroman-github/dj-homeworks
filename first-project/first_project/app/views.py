@@ -26,11 +26,6 @@ def home_view(request):
 
 
 def time_view(request):
-    # обратите внимание – здесь HTML шаблона нет, 
-    # возвращается просто текст
-    # current_time = datetime.now().strftime('%H:%M')
-    # msg = f'Текущее время: {current_time}'
-    # return HttpResponse(msg)
     current_time = datetime.now().strftime('%H:%M:%S')
     home_url = reverse('home')
     return render(
