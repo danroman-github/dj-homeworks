@@ -4,7 +4,9 @@
 Необходимо реализовать 3 view функции и настроить для них правильные urls.
 
 [/ - домашняя страница](/first-project/first_project/app/templates/app/home.html), содержит список доступных страниц;
+
 [current_time/](/first-project/first_project/app/templates/app/current_time.html) - показывает текущее время в любом удобном вам формате;
+
 [workdir/](/first-project/first_project/app/templates/app/workdir.html) – выводит содержимое рабочей директории.
 
 В первую очередь обратите внимание на файл urls.py. В нем задаются пути ко view-функциям, которые отвечают по соответствующим запросам.
