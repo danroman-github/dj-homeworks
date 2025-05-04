@@ -28,3 +28,22 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+def recipe_views(request, dish_name):
+    recipe = DATA.get(dish_name)
+
+    if recipe is None:
+        context = {'recipe': None}
+    else:
+        servings = request.GET.get('servings')
+
+        if servings and servings.isdigit() and int(servings) > 0:
+            servings = int(servings)
+            adjusted_recipe = {}
+            for ingredient, amount in recipe.items():
+                adjusted_recipe[ingredient] = amount * servings
+            context = {'recipe': adjusted_recipe}
+        else:
+            context = {'recipe': recipe}
+
+    return render(request, 'calculator/index.html', context)
