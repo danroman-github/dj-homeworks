@@ -23,10 +23,12 @@
                     <a href="{% url 'phone' phone.slug %}">
                         <h3>{{ phone.name }}</h3>
                     </a>
-                    <p class="price">
+                    <div class="price">
                         <strong>Стоимость: {{ phone.price }} ₽<strong>
-                    </p>
-                    <img height="400" src="{{ phone.image }}" alt="{{ phone.name }}"/>
+                    </div>
+                    <a href="{% url 'phone' phone.slug %}">
+                        <img href="{% url 'phone' phone.slug %}" height="400" src="{{ phone.image }}" alt="{{ phone.name }}">
+                    </a>
                 </div>
             {% endfor %}
         </div>
