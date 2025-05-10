@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'phones',
+    'phones.apps.PhonesConfig',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +53,8 @@ DATABASES = {
         'NAME': 'netology_phone_comparison',
         'HOST': '127.0.0.1',
         'PORT': '5432',
+        'USER': 'postgres',
+        'PASSWORD': '34417764',
     }
 }
 

@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from phones.views import show_catalog
+from phones.views import show_catalog, product_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', show_catalog)
+    path('catalog/', show_catalog, name='catalog'),
+    path('product/<slug:slug>/', product_detail, name='phone'),
 ]

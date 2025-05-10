@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
+from pathlib import Path
+
+# Добавляем путь к приложению в PYTHONPATH
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.append(str(BASE_DIR / 'phones'))
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main.settings')
