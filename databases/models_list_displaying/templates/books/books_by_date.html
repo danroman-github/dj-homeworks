@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог книг{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="header">
+            <h1><a href="/books">Каталог</a></h1>
+        </div>
+
+        {% if is_min_date and current_date != requested_date %}
+        <div class="alert alert-info">
+            Вы запросили дату {{ requested_date|date:"Y-m-d" }}, но показаны книги с минимальной доступной датой {{ current_date|date:"Y-m-d" }}
+        </div>
+        {% endif %}
+
+        {% if is_max_date and current_date != requested_date %}
+        <div class="alert alert-info">
+            Вы запросили дату {{ requested_date|date:"Y-m-d" }}, но показаны книги с максимальной доступной датой {{ current_date|date:"Y-m-d" }}
+        </div>
+        {% endif %}
+
+        <div class="row">
+            {% for book in books %}
+                <div class="col-md-3 mb-4">
+                    <div class="book card border-0 h-100">
+                        <div class="card-body">
+                            <a class="text-decoration-none">
+                                <h3 class="card-title text-primary">{{ book.name }}</h3>
+                            </a>
+                            <p class="card-text text-muted">Автор: {{ book.author }}</p>
+                            <p class="card-text text-muted">Дата публикации: {{ book.pub_date|date:"Y-m-d" }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        Нет книг с датой публикации {{ current_date|date:"Y-m-d" }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация по датам -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="Date navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if prev_date %}
+                        <li class="page-item">
+                            <a class="page-link" href="/books/{{ prev_date|date:'Y-m-d' }}/" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; {{ prev_date|date:"Y-m-d" }}</span>
+                            </a>
+                        </li>
+                        {% elif not is_min_date %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true">&laquo; Нет предыдущей даты</span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">{{ current_date|date:"Y-m-d" }}</span>
+                        </li>
+
+                        {% if next_date %}
+                        <li class="page-item">
+                            <a class="page-link" href="/books/{{ next_date|date:'Y-m-d' }}/" aria-label="Next">
+                                <span aria-hidden="true">{{ next_date|date:"Y-m-d" }} &raquo;</span>
+                            </a>
+                        </li>
+                        {% elif not is_max_date %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true">Нет следующей даты &raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}
