@@ -5,14 +5,14 @@ from .models import Student
 
 
 def students_list(request):
-    template = 'school/students_list.html'
-    ordering = 'group'  # Параметр сортировки по классу
+    students = Student.objects.order_by('group').prefetch_related('teachers')
+    return render(request, 'school/students_list.html', {'object_list': students})
 
-    # Получаем всех учеников с предварительной загрузкой учителей для оптимизации запросов
-    students = Student.objects.order_by(ordering).prefetch_related('teachers')
 
-    context = {
-        'object_list': students,  # Передаем список учеников в контекст
-    }
+class StudentListView(ListView):
+    model = Student
+    ordering = 'group'
+    template_name = 'school/students_list.html'
 
-    return render(request, template, context)
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('teachers')
