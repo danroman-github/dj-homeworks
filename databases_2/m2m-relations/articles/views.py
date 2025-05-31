@@ -1,15 +1,38 @@
+from django.db.models import Prefetch
 from django.views.generic import ListView
 from django.shortcuts import render
 
-from articles.models import Article
+from articles.models import Article, ArticleSection
 
 
 def articles_list(request):
-    template = 'articles/news.html'
-    context = {}
+    articles = Article.objects.order_by('-published_at').prefetch_related(
+        Prefetch(
+            'articlesection_set',
+            queryset=ArticleSection.objects.select_related('section'),
+            to_attr='scopes'
+        )
+    )
 
-    # используйте этот параметр для упорядочивания результатов
-    # https://docs.djangoproject.com/en/2.2/ref/models/querysets/#django.db.models.query.QuerySet.order_by
+    return render(request, 'articles/news.html', {'object_list': articles})
+
+
+class ArticlesListView(ListView):
+    model = Article
+    template_name = 'articles/news.html'
+    context_object_name = 'object_list'
     ordering = '-published_at'
 
-    return render(request, template, context)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.prefetch_related(
+            Prefetch(
+                'articlesection_set',
+                queryset=ArticleSection.objects.select_related('section'),
+                to_attr='scopes'
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
