@@ -5,8 +5,9 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Sensor
+from .models import Sensor, Measurement
 from .serializers import MeasurementSerializer, SensorSerializer
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 
 
 class SensorListCreateView(ListCreateAPIView):
@@ -24,36 +25,47 @@ class SensorRetrieveUpdateView(RetrieveUpdateAPIView):
 
 class MeasurementCreateView(CreateAPIView):
     """Добавление нового измерения температуры"""
+    # queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
     def create(self, request, *args, **kwargs):
-        # Проверяем существование датчика
-        sensor_id = request.data.get('sensor')
-        if not sensor_id:
-            return Response(
-                {'ошибка': 'Не указан ID датчика'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
         try:
-            sensor = Sensor.objects.get(pk=sensor_id)
+            # Проверка существования датчика
+            sensor_id = request.data.get('sensor')
+            if not sensor_id:
+                return Response(
+                    {'error': 'ID датчика обязательно'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            Sensor.objects.get(pk=sensor_id)
+
+            # Обработка файла
+            if 'image' in request.FILES:
+                image = request.FILES['image']
+                if image.size > 2 * 1024 * 1024:  # 2MB лимит
+                    return Response(
+                        {'error': 'Файл слишком большой (макс. 2MB)'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+            return super().create(request, *args, **kwargs)
+
         except Sensor.DoesNotExist:
             return Response(
-                {'ошибка': f'Датчик с ID={sensor_id} не найден'},
+                {'error': f'Датчик с ID={sensor_id} не найден'},
                 status=status.HTTP_404_NOT_FOUND
             )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-        # Добавляем sensor_id в данные перед валидацией
-        data = request.data.copy()
-        data['sensor_id'] = sensor.id
-
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
+        return super().create(request, *args, **kwargs)
